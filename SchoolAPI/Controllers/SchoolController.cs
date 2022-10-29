@@ -52,6 +52,16 @@ namespace SchoolAPI.Controllers
             return Ok(schoolDTO);
         }
 
+        [HttpPost]
+        public ActionResult CreateSchool([FromBody] CreateSchoolDTO dto)
+        {
+            var school = _mapper.Map<School>(dto);
+            _dbContext.Schools.Add(school);
+            _dbContext.SaveChanges();
+
+            return Created($"/api/schools/{school.Id}",null);
+        }
+
         
     }
 }

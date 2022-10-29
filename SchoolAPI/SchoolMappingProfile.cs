@@ -14,6 +14,10 @@ namespace SchoolAPI
                 .ForMember(s => s.PostalCode, c => c.MapFrom(s => s.Address.PostalCode));
 
             CreateMap<Course, CourseDTO>();
+
+            CreateMap<CreateSchoolDTO,School>()
+                .ForMember(s => s.Address, c=>c.MapFrom(dto =>  new Address() 
+                    { City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street}));
         }
     }
 }
