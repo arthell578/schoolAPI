@@ -26,6 +26,11 @@ namespace SchoolAPI.Entities
                 .Property(c => c.City)
                 .IsRequired()
                 .HasMaxLength(40);
+
+            modelBuilder.Entity<School>()
+                .Property(s => s.ContactNumber)
+                .IsRequired()
+                .HasMaxLength(12);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
