@@ -1,5 +1,6 @@
 using SchoolAPI;
 using SchoolAPI.Entities;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 
 var app = builder.Build();
 
