@@ -19,11 +19,13 @@ namespace SchoolAPI.Services
     {
         private readonly SchoolDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<SchoolService> _logger;
 
-        public SchoolService(SchoolDbContext dbContext, IMapper mapper)
+        public SchoolService(SchoolDbContext dbContext, IMapper mapper, ILogger<SchoolService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public SchoolDTO GetByID(int id)
@@ -65,6 +67,8 @@ namespace SchoolAPI.Services
 
         public bool Delete(int id)
         {
+            _logger.LogError($"School with id {id} DELETE action invoked");
+
             var school = _dbContext
             .Schools
             .FirstOrDefault(r => r.Id == id);
