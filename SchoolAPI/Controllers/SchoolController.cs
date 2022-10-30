@@ -3,31 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
 using SchoolAPI.Models;
+using SchoolAPI.Services;
 
 namespace SchoolAPI.Controllers
 {
     [Route("api/school")]
     public class SchoolController : ControllerBase
     {
-        private readonly SchoolDbContext _dbContext;
-        private readonly IMapper _mapper;
+        public ISchoolService _schoolService;
 
-        public SchoolController(SchoolDbContext dbContext,IMapper mapper)
+        public SchoolController(ISchoolService schoolService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _schoolService = schoolService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<SchoolDTO>> GetAll()
         {
-            var schools = _dbContext
-                .Schools
-                .Include(s=>s.Address)
-                .Include(s=>s.courses)
-                .ToList();
-
-            var schoolsDTO = _mapper.Map<List<SchoolDTO>>(schools);
+            var schoolsDTO = _schoolService.GetAll();
 
             return Ok(schoolsDTO);
         }
@@ -35,31 +28,22 @@ namespace SchoolAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<SchoolDTO> Get([FromRoute]int id)
         {
-            var school = _dbContext
-                .Schools
-                .Include(s => s.Address)
-                .Include(s => s.courses)
-                .FirstOrDefault(r => r.Id == id);
-
-
-            if (school is null)
-            {
-                return NotFound();
-            }
-
-            var schoolDTO = _mapper.Map<SchoolDTO>(school);
-
-            return Ok(schoolDTO);
+            var school = _schoolService.GetByID(id);
+            return Ok(school);
         }
 
         [HttpPost]
         public ActionResult CreateSchool([FromBody] CreateSchoolDTO dto)
         {
-            var school = _mapper.Map<School>(dto);
-            _dbContext.Schools.Add(school);
-            _dbContext.SaveChanges();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return Created($"/api/schools/{school.Id}",null);
+           var id = _schoolService.Create(dto);
+
+
+            return Created($"/api/schools/{id}",null);
         }
 
         
