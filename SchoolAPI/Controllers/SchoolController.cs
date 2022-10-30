@@ -46,6 +46,29 @@ namespace SchoolAPI.Controllers
             return Created($"/api/schools/{id}",null);
         }
 
-        
+        [HttpDelete("{id}")]
+        public ActionResult DeleteSchool([FromRoute] int id)
+        {
+            var isDeleted = _schoolService.Delete(id);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var isUpdated = _schoolService.Update(id, dto);
+            if (!isUpdated) return NotFound();
+            return Ok();
+        }
     }
 }
