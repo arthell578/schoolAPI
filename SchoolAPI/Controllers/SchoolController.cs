@@ -46,6 +46,16 @@ namespace SchoolAPI.Controllers
             return Created($"/api/schools/{id}",null);
         }
 
-        
+        [HttpDelete("{id}")]
+        public ActionResult DeleteSchool([FromRoute] int id)
+        {
+            var isDeleted = _schoolService.Delete(id);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
     }
 }
