@@ -10,7 +10,6 @@ namespace SchoolAPI.Services
         int Create(CreateSchoolDTO dto);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
-        bool Delete(int id);
     }
 
     public class SchoolService : ISchoolService
@@ -59,19 +58,6 @@ namespace SchoolAPI.Services
             _dbContext.SaveChanges();
 
             return school.Id;
-        }
-
-        public bool Delete(int id)
-        {
-            var school = _dbContext
-            .Schools
-            .FirstOrDefault(r => r.Id == id);
-
-            if (school is null) return false;
-
-            _dbContext.Schools.Remove(school);
-            _dbContext.SaveChanges();
-            return true;
         }
     }
 }
