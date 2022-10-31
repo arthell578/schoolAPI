@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
+using SchoolAPI.Exceptions;
 using SchoolAPI.Models;
 
 namespace SchoolAPI.Services
@@ -10,8 +11,8 @@ namespace SchoolAPI.Services
         int Create(CreateSchoolDTO dto);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
-        bool Delete(int id);
-        bool Update(int id, UpdateSchoolDTO dto);
+        void Delete(int id);
+        void Update(int id, UpdateSchoolDTO dto);
 
     }
 
@@ -36,7 +37,8 @@ namespace SchoolAPI.Services
               .Include(s => s.courses)
               .FirstOrDefault(r => r.Id == id);
 
-            if (school is null) return null;
+            if (school is null)
+                throw new NotFoundException("School could not be found");
 
             var result = _mapper.Map<SchoolDTO>(school);
             return result;
@@ -65,7 +67,7 @@ namespace SchoolAPI.Services
             return school.Id;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             _logger.LogError($"School with id {id} DELETE action invoked");
 
@@ -73,21 +75,22 @@ namespace SchoolAPI.Services
             .Schools
             .FirstOrDefault(r => r.Id == id);
 
-            if (school is null) return false;
+            if (school is null)
+                throw new NotFoundException("School could not be found");
 
             _dbContext.Schools.Remove(school);
             _dbContext.SaveChanges();
-            return true;
         }
 
 
-        public bool Update(int id, UpdateSchoolDTO dto)
+        public void Update(int id, UpdateSchoolDTO dto)
         {
             var school = _dbContext
                 .Schools
                 .FirstOrDefault(r => r.Id == id);
 
-            if (school is null) return false;
+            if (school is null)
+                throw new NotFoundException("School could not be found");
 
 
             school.Name = dto.Name;
@@ -95,7 +98,6 @@ namespace SchoolAPI.Services
             school.ContactNumber = dto.ContactNumber;
 
             _dbContext.SaveChanges();
-            return true;
         }
     }
 }

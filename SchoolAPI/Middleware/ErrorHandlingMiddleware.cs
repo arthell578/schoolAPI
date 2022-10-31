@@ -1,4 +1,6 @@
-﻿namespace SchoolAPI.Middleware
+﻿using SchoolAPI.Exceptions;
+
+namespace SchoolAPI.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {
@@ -14,6 +16,11 @@
             try
             {
                 await next.Invoke(context);
+            } 
+            catch (NotFoundException notFoundEx)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(notFoundEx.Message);
             }
             catch(Exception e)
             {

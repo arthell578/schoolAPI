@@ -8,6 +8,7 @@ using SchoolAPI.Services;
 namespace SchoolAPI.Controllers
 {
     [Route("api/school")]
+    [ApiController]
     public class SchoolController : ControllerBase
     {
         public ISchoolService _schoolService;
@@ -35,10 +36,6 @@ namespace SchoolAPI.Controllers
         [HttpPost]
         public ActionResult CreateSchool([FromBody] CreateSchoolDTO dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
            var id = _schoolService.Create(dto);
 
@@ -49,25 +46,15 @@ namespace SchoolAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteSchool([FromRoute] int id)
         {
-            var isDeleted = _schoolService.Delete(id);
+            _schoolService.Delete(id);
 
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-            return NotFound();
+            return NoContent();
         }
 
         [HttpPut("{id}")]
         public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var isUpdated = _schoolService.Update(id, dto);
-            if (!isUpdated) return NotFound();
+            _schoolService.Update(id, dto);
             return Ok();
         }
     }
