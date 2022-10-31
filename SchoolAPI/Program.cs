@@ -20,6 +20,7 @@ builder.Services.AddScoped<SchoolSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ISchoolService, SchoolService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -31,6 +32,7 @@ var seeder = scope.ServiceProvider.GetRequiredService<SchoolSeeder>();
 seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<RequestExecutionTimeMiddleware>();
 
 app.UseHttpsRedirection();
 
