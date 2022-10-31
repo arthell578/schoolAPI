@@ -1,6 +1,7 @@
 using NLog.Web;
 using SchoolAPI;
 using SchoolAPI.Entities;
+using SchoolAPI.Middleware;
 using SchoolAPI.Services;
 using System.Reflection;
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ISchoolService, SchoolService>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -26,6 +28,8 @@ var seeder = scope.ServiceProvider.GetRequiredService<SchoolSeeder>();
 
 // Configure the HTTP request pipeline.
 seeder.Seed();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
