@@ -20,8 +20,9 @@ namespace SchoolAPI.Controllers
         {
            var newCourseId =  courseService.Create(schoolId,dto);
 
-            return Created($"api/{schoolId}/course/{newCourseId}", null);
+            return Created($"api/school/{schoolId}/course/{newCourseId}", null);
         }
+
 
     }
 }
