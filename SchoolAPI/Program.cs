@@ -19,6 +19,7 @@ builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ISchoolService, SchoolService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();

@@ -18,6 +18,8 @@ namespace SchoolAPI
             CreateMap<CreateSchoolDTO,School>()
                 .ForMember(s => s.Address, c=>c.MapFrom(dto =>  new Address() 
                     { City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street}));
+
+            CreateMap<CreateCourseDTO, Course>();
         }
     }
 }
