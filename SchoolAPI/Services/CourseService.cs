@@ -11,6 +11,8 @@ namespace SchoolAPI.Services
         int Create(int schoolId, CreateCourseDTO dto);
         List<CourseDTO> GetAll(int schoolId);
         CourseDTO GetByID(int schoolId, int courseId);
+
+        void RemoveAll(int schoolId);
     }
 
     public class CourseService : ICourseService
@@ -26,10 +28,7 @@ namespace SchoolAPI.Services
 
         public int Create(int schoolId, CreateCourseDTO dto)
         {
-            var school = _dbContext.Schools.FirstOrDefault(s => s.Id == schoolId);
-
-            if (school is null)
-                throw new NotFoundException("School not found");
+            var school = GetSchoolByID(schoolId);
 
             var courseEntity = _mapper.Map<Course>(dto);
 
@@ -43,10 +42,7 @@ namespace SchoolAPI.Services
 
         public CourseDTO GetByID(int schoolId, int courseId)
         {
-            var school = _dbContext.Schools.FirstOrDefault(s => s.Id == schoolId);
-
-            if (school is null)
-                throw new NotFoundException("School not found");
+            var school = GetSchoolByID(schoolId);
 
             var course = _dbContext.Courses.FirstOrDefault(c => c.Id == courseId);
 
@@ -59,15 +55,30 @@ namespace SchoolAPI.Services
 
         public List<CourseDTO> GetAll(int schoolId)
         {
+            var school = GetSchoolByID(schoolId);
+
+            var coursesDTO = _mapper.Map<List<CourseDTO>>(school.courses);
+            return coursesDTO;
+        }
+
+        public void RemoveAll(int schoolId)
+        {
+            var school = GetSchoolByID(schoolId);
+
+            _dbContext.RemoveRange(school.courses);
+            _dbContext.SaveChanges();
+        }
+
+        private School GetSchoolByID(int schoolId)
+        {
             var school = _dbContext.Schools
-                .Include(s => s.courses)
-                .FirstOrDefault(s => s.Id == schoolId);
+            .Include(s => s.courses)
+            .FirstOrDefault(s => s.Id == schoolId);
 
             if (school is null)
                 throw new NotFoundException("School not found");
 
-            var coursesDTO = _mapper.Map<List<CourseDTO>>(school.courses);
-            return coursesDTO;
+            return school;
         }
     }
 }

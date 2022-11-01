@@ -36,5 +36,13 @@ namespace SchoolAPI.Controllers
             var courses = courseService.GetAll(schoolId);
             return Ok(courses);
         }
+
+        [HttpDelete]
+        public ActionResult Delete([FromRoute] int schoolId)
+        {
+            courseService.RemoveAll(schoolId);
+
+            return NoContent();
+        }
     }
 }
