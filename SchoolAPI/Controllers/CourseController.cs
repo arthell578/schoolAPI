@@ -23,6 +23,18 @@ namespace SchoolAPI.Controllers
             return Created($"api/school/{schoolId}/course/{newCourseId}", null);
         }
 
+        [HttpGet("{dishId}")]
+        public ActionResult<CourseDTO> Get([FromRoute] int schoolId, [FromRoute] int courseId)
+        {
+            var course = courseService.GetByID(schoolId, courseId);
+            return Ok(course);
+        }
 
+        [HttpGet]
+        public ActionResult<List<CourseDTO>> Get([FromRoute] int schoolId)
+        {
+            var courses = courseService.GetAll(schoolId);
+            return Ok(courses);
+        }
     }
 }
