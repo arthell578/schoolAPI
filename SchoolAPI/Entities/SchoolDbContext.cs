@@ -9,9 +9,20 @@ namespace SchoolAPI.Entities
         public DbSet<School> Schools { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Teacher>()
+                .Property(t => t.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
+                .IsRequired();
+
             modelBuilder.Entity<School>()
                 .Property(r => r.Name)
                 .IsRequired()
