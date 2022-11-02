@@ -13,5 +13,8 @@ namespace SchoolAPI.Models
         public string Specialization { get; set; }
         public DateTime? TeachingStartDate { get; set; }
         public int RoleId { get; set; } = 1;
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using NLog.Web;
 using SchoolAPI;
 using SchoolAPI.Entities;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<ISchoolService, SchoolService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<IPasswordHasher<Teacher>,PasswordHasher<Teacher>>();
 builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();
 
