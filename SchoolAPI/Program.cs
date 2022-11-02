@@ -40,6 +40,12 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSetting.JwtKey))
     };
 });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("HasSpecialization",builder => builder.RequireClaim("Specialization"));
+});
+
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();

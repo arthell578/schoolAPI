@@ -73,9 +73,15 @@ namespace SchoolAPI.Services
                 new Claim(ClaimTypes.NameIdentifier,teacher.Id.ToString()),
                 new Claim(ClaimTypes.Name,$"{teacher.FirstName} {teacher.LastName}"),
                 new Claim(ClaimTypes.Role, $"{teacher.Role}"),
-                new Claim("TeachingStartDate",teacher.TeachingStartDate.Value.ToString("yyyy-MM-dd")),
-                new Claim("Specialization",teacher.Specialization)
+                new Claim("TeachingStartDate",teacher.TeachingStartDate.Value.ToString("yyyy-MM-dd"))
             };
+
+            if (!string.IsNullOrEmpty(teacher.Specialization))
+            {
+                claims.Add(
+                    new Claim("Specialization", teacher.Specialization)
+                    );
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
