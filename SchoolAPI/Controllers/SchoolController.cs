@@ -10,7 +10,6 @@ namespace SchoolAPI.Controllers
 {
     [Route("api/school")]
     [ApiController]
-    [Authorize]
     public class SchoolController : ControllerBase
     {
         public ISchoolService _schoolService;
@@ -29,6 +28,7 @@ namespace SchoolAPI.Controllers
             return Ok(schoolsDTO);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<SchoolDTO> Get([FromRoute]int id)
         {
@@ -47,6 +47,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteSchool([FromRoute] int id)
         {
             _schoolService.Delete(id);
@@ -55,6 +56,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Principal")]
         public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
         {
             _schoolService.Update(id, dto);
