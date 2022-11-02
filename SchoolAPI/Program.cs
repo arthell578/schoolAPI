@@ -23,6 +23,7 @@ builder.Host.UseNLog();
 
 var authSetting = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authSetting);
+builder.Services.AddSingleton(authSetting);
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = "Bearer";
