@@ -62,7 +62,7 @@ seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestExecutionTimeMiddleware>();
-
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseSwagger();
