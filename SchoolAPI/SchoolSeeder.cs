@@ -15,6 +15,12 @@ namespace SchoolAPI
         {
             if (_dbContext.Database.CanConnect())
             {
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.Roles.AddRange(roles);
+                    _dbContext.SaveChanges();
+                }
                 if (!_dbContext.Schools.Any())
                 {
                     var schools = GetSchools();
@@ -23,6 +29,28 @@ namespace SchoolAPI
                 }
             }
         }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "Teacher"
+                },
+                new Role()
+                {
+                    Name = "Principal"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                }
+            };
+
+            return roles;
+        }
+
 
         private IEnumerable<School> GetSchools()
         {
