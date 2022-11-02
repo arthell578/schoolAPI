@@ -13,6 +13,7 @@ namespace SchoolAPI.Services
     public interface IAccountService
     {
         void RegiserUser(RegisterTeacherDTO dto);
+        string GenerateJwt(LoginDTO dto);
     }
 
     public class AccountService : IAccountService
