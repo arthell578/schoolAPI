@@ -19,6 +19,8 @@ builder.Host.UseNLog();
 
 // Add services to the container.
 
+var authSetting = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authSetting);
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
