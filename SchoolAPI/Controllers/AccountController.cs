@@ -26,6 +26,7 @@ namespace SchoolAPI.Controllers
         public ActionResult Login([FromBody] LoginDTO dto)
         {
             string token = _accountService.GenerateJwt(dto);
+            return Ok(token);
         }
     }
 }
