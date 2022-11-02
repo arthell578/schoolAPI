@@ -1,8 +1,12 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using NLog.Web;
 using SchoolAPI;
 using SchoolAPI.Entities;
 using SchoolAPI.Middleware;
+using SchoolAPI.Models;
+using SchoolAPI.Models.Validators;
 using SchoolAPI.Services;
 using System.Reflection;
 
@@ -15,7 +19,7 @@ builder.Host.UseNLog();
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -24,6 +28,7 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<Teacher>,PasswordHasher<Teacher>>();
+builder.Services.AddScoped<IValidator<RegisterTeacherDTO>, RegisterTeacherDTOValidator>();
 builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();
 
