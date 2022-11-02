@@ -10,6 +10,7 @@ namespace SchoolAPI.Controllers
 {
     [Route("api/school")]
     [ApiController]
+    [Authorize]
     public class SchoolController : ControllerBase
     {
         public ISchoolService _schoolService;
@@ -20,7 +21,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<SchoolDTO>> GetAll()
         {
             var schoolsDTO = _schoolService.GetAll();
