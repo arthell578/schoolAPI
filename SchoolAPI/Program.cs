@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using SchoolAPI;
 using SchoolAPI.Entities;
@@ -9,6 +10,7 @@ using SchoolAPI.Models;
 using SchoolAPI.Models.Validators;
 using SchoolAPI.Services;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,22 @@ builder.Host.UseNLog();
 
 var authSetting = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authSetting);
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(config =>
+{
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = authSetting.JwtIssuer,
+        ValidAudience = authSetting.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSetting.JwtKey))
+    };
+});
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<SchoolDbContext>();
 builder.Services.AddScoped<SchoolSeeder>();
