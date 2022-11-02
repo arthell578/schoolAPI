@@ -9,7 +9,7 @@ namespace SchoolAPI.Entities
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime? TeachingStartDate { get; set}; 
+        public DateTime? TeachingStartDate { get; set; }
         public string Specialization { get; set; }
         public string PasswordHash { get; set; }
         public int RoleId { get; set; }
