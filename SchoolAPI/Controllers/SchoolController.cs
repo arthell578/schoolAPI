@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
@@ -19,6 +20,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<SchoolDTO>> GetAll()
         {
             var schoolsDTO = _schoolService.GetAll();
