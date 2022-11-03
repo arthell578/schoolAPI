@@ -9,5 +9,10 @@ namespace SchoolAPI.Authorization
     public class ResourceOperationRequirement : IAuthorizationRequirement
     {
         public ResourceOperation Operation { get; set; }
+
+        public ResourceOperationRequirement(ResourceOperation operation)
+        {
+            Operation = operation;
+        }
     }
 }
