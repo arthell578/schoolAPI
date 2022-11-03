@@ -20,7 +20,6 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy ="HasSpecialization")]
         public ActionResult<IEnumerable<SchoolDTO>> GetAll()
         {
             var schoolsDTO = _schoolService.GetAll();
