@@ -8,7 +8,7 @@ namespace SchoolAPI.Services
 {
     public interface ISchoolService
     {
-        int Create(CreateSchoolDTO dto);
+        int Create(CreateSchoolDTO dto, int teacherId);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
         void Delete(int id);
@@ -58,9 +58,10 @@ namespace SchoolAPI.Services
             return schoolsDTO;
         }
 
-        public int Create(CreateSchoolDTO dto)
+        public int Create(CreateSchoolDTO dto, int teacherId)
         {
             var school = _mapper.Map<School>(dto);
+            school.CreatedById = teacherId;
             _dbContext.Schools.Add(school);
             _dbContext.SaveChanges();
 
