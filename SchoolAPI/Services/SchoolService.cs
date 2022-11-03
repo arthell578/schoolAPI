@@ -15,8 +15,8 @@ namespace SchoolAPI.Services
         int Create(CreateSchoolDTO dto, int teacherId);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
-        void Delete(int id);
-        void Update(int id, UpdateSchoolDTO dto);
+        void Delete(int id, ClaimsPrincipal user);
+        void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user);
 
     }
 
@@ -77,13 +77,20 @@ namespace SchoolAPI.Services
             return school.Id;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, ClaimsPrincipal user)
         {
             _logger.LogError($"School with id {id} DELETE action invoked");
 
             var school = _dbContext
             .Schools
             .FirstOrDefault(r => r.Id == id);
+
+            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             if (school is null)
                 throw new NotFoundException("School could not be found");
