@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SchoolAPI.Entities;
+using System.Security.Claims;
 
 namespace SchoolAPI.Authorization
 {
@@ -13,6 +14,9 @@ namespace SchoolAPI.Authorization
             {
                 context.Succeed(requirement);
             }
+
+            var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
         }
     }
 }
