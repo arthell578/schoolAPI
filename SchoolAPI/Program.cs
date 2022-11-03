@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using SchoolAPI;
+using SchoolAPI.Authorization;
 using SchoolAPI.Entities;
 using SchoolAPI.Middleware;
 using SchoolAPI.Models;
@@ -44,7 +45,9 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HasSpecialization",builder => builder.RequireClaim("Specialization"));
+    options.AddPolicy("HasAtleast10YearsExperience", builder => builder.AddRequirements(new MinimumExperienceRequired()));
 });
+
 
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<SchoolDbContext>();
