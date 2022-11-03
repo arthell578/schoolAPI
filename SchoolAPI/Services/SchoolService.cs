@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using SchoolAPI.Authorization;
 using SchoolAPI.Entities;
 using SchoolAPI.Exceptions;
 using SchoolAPI.Models;
+using System.Security.Claims;
 
 namespace SchoolAPI.Services
 {
@@ -91,11 +93,14 @@ namespace SchoolAPI.Services
         }
 
 
-        public void Update(int id, UpdateSchoolDTO dto)
+        public void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user)
         {
+
             var school = _dbContext
                 .Schools
                 .FirstOrDefault(r => r.Id == id);
+
+            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update));
 
             if (school is null)
                 throw new NotFoundException("School could not be found");
