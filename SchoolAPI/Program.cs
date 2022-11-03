@@ -46,7 +46,6 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HasSpecialization",builder => builder.RequireClaim("Specialization"));
-    options.AddPolicy("HasAtleast10YearsExperience", builder => builder.AddRequirements(new MinimumExperienceRequired()));
 });
 
 
