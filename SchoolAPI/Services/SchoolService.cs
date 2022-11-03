@@ -100,7 +100,12 @@ namespace SchoolAPI.Services
                 .Schools
                 .FirstOrDefault(r => r.Id == id);
 
-            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update));
+            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             if (school is null)
                 throw new NotFoundException("School could not be found");
