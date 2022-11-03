@@ -51,7 +51,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteSchool([FromRoute] int id)
         {
-            _schoolService.Delete(id);
+            _schoolService.Delete(id, User);
 
             return NoContent();
         }
@@ -60,7 +60,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin,Principal")]
         public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
         {
-            _schoolService.Update(id, dto);
+            _schoolService.Update(id, dto, User);
             return Ok();
         }
     }
