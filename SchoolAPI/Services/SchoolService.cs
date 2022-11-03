@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
 using SchoolAPI.Exceptions;
@@ -21,12 +23,17 @@ namespace SchoolAPI.Services
         private readonly SchoolDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<SchoolService> _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public SchoolService(SchoolDbContext dbContext, IMapper mapper, ILogger<SchoolService> logger)
+        public SchoolService(SchoolDbContext dbContext,
+            IMapper mapper,
+            ILogger<SchoolService> logger,
+            IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
 
         public SchoolDTO GetByID(int id)
