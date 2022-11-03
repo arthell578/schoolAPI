@@ -17,6 +17,11 @@ namespace SchoolAPI.Authorization
 
             var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
+            if(school.CreatedById == int.Parse(userId)){
+                context.Succeed(requirement);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
