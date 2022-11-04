@@ -2,7 +2,13 @@
 
 namespace SchoolAPI.Services
 {
-    public class UserContextService
+    public interface IUserContextService
+    {
+        int? GetUserId { get; }
+        ClaimsPrincipal User { get; }
+    }
+
+    public class UserContextService : IUserContextService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -13,5 +19,6 @@ namespace SchoolAPI.Services
 
         public ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
         public int? GetUserId => User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
     }
 }
