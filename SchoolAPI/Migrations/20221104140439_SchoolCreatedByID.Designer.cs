@@ -12,8 +12,8 @@ using SchoolAPI.Entities;
 namespace SchoolAPI.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20221103152250_SchoolUserIdAdd")]
-    partial class SchoolUserIdAdd
+    [Migration("20221104140439_SchoolCreatedByID")]
+    partial class SchoolCreatedByID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -116,7 +116,7 @@ namespace SchoolAPI.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
-                    b.Property<int>("CreatedById")
+                    b.Property<int?>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -204,9 +204,7 @@ namespace SchoolAPI.Migrations
 
                     b.HasOne("SchoolAPI.Entities.Teacher", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.Navigation("Address");
 

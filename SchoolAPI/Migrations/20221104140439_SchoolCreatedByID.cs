@@ -4,7 +4,7 @@
 
 namespace SchoolAPI.Migrations
 {
-    public partial class SchoolUserIdAdd : Migration
+    public partial class SchoolCreatedByID : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +12,7 @@ namespace SchoolAPI.Migrations
                 name: "CreatedById",
                 table: "Schools",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schools_CreatedById",
@@ -25,8 +24,7 @@ namespace SchoolAPI.Migrations
                 table: "Schools",
                 column: "CreatedById",
                 principalTable: "Teachers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
