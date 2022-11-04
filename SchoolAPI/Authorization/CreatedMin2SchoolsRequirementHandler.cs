@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
+using System.Security.Claims;
 
 namespace SchoolAPI.Authorization
 {
@@ -14,7 +16,16 @@ namespace SchoolAPI.Authorization
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CreatedMin2SchoolsRequirement requirement)
         {
-            throw new NotImplementedException();
+            var teacherId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            var numOfCreatedSchools = _dbContext.Schools.Count(s => s.CreatedById == teacherId);
+            
+            if(numOfCreatedSchools >= requirement.MinSchoolsCreated)
+            {
+                context.Succeed(requirement);   
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
