@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HasSpecialization",builder => builder.RequireClaim("Specialization"));
-    options.AddPolicy("HasCreatedMin2Schools",builder => builder.RequireClaim("Specialization"));
+    options.AddPolicy("HasCreatedMin2Schools",builder => builder.AddRequirements(new CreatedMin2SchoolsRequirement(2)));
 });
 
 
@@ -59,6 +59,7 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CreatedMin2SchoolsRequirementHandler>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<Teacher>,PasswordHasher<Teacher>>();
 builder.Services.AddScoped<IValidator<RegisterTeacherDTO>, RegisterTeacherDTOValidator>();
