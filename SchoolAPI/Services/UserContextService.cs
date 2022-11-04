@@ -2,8 +2,11 @@
 {
     public class UserContextService
     {
-        public UserContextService()
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserContextService(IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
     }
 }
