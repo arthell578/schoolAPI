@@ -46,6 +46,7 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HasSpecialization",builder => builder.RequireClaim("Specialization"));
+    options.AddPolicy("HasCreatedMin2Schools",builder => builder.RequireClaim("Specialization"));
 });
 
 
