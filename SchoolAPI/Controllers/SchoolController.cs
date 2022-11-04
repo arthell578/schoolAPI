@@ -21,6 +21,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "HasCreatedMin2Schools")]
         public ActionResult<IEnumerable<SchoolDTO>> GetAll()
         {
             var schoolsDTO = _schoolService.GetAll();
