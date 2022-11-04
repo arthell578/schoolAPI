@@ -12,11 +12,11 @@ namespace SchoolAPI.Services
 {
     public interface ISchoolService
     {
-        int Create(CreateSchoolDTO dto, int teacherId);
+        int Create(CreateSchoolDTO dto);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
-        void Delete(int id, ClaimsPrincipal user);
-        void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user);
+        void Delete(int id);
+        void Update(int id, UpdateSchoolDTO dto);
 
     }
 
@@ -26,16 +26,19 @@ namespace SchoolAPI.Services
         private readonly IMapper _mapper;
         private readonly ILogger<SchoolService> _logger;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
         public SchoolService(SchoolDbContext dbContext,
             IMapper mapper,
             ILogger<SchoolService> logger,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
 
         public SchoolDTO GetByID(int id)
@@ -67,17 +70,17 @@ namespace SchoolAPI.Services
             return schoolsDTO;
         }
 
-        public int Create(CreateSchoolDTO dto, int teacherId)
+        public int Create(CreateSchoolDTO dto)
         {
             var school = _mapper.Map<School>(dto);
-            school.CreatedById = teacherId;
+            school.CreatedById = _userContextService.GetUserId;
             _dbContext.Schools.Add(school);
             _dbContext.SaveChanges();
 
             return school.Id;
         }
 
-        public void Delete(int id, ClaimsPrincipal user)
+        public void Delete(int id)
         {
             _logger.LogError($"School with id {id} DELETE action invoked");
 
@@ -85,7 +88,7 @@ namespace SchoolAPI.Services
             .Schools
             .FirstOrDefault(r => r.Id == id);
 
-            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authResult = _authorizationService.AuthorizeAsync(_userContextService.User, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
             if (!authResult.Succeeded)
             {
@@ -100,14 +103,14 @@ namespace SchoolAPI.Services
         }
 
 
-        public void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user)
+        public void Update(int id, UpdateSchoolDTO dto)
         {
 
             var school = _dbContext
                 .Schools
                 .FirstOrDefault(r => r.Id == id);
 
-            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authResult = _authorizationService.AuthorizeAsync(_userContextService.User, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
             if (!authResult.Succeeded)
             {
