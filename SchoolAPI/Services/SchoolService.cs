@@ -1,18 +1,22 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using SchoolAPI.Authorization;
 using SchoolAPI.Entities;
 using SchoolAPI.Exceptions;
 using SchoolAPI.Models;
+using System.Security.Claims;
 
 namespace SchoolAPI.Services
 {
     public interface ISchoolService
     {
-        int Create(CreateSchoolDTO dto);
+        int Create(CreateSchoolDTO dto, int teacherId);
         IEnumerable<SchoolDTO> GetAll();
         SchoolDTO GetByID(int id);
-        void Delete(int id);
-        void Update(int id, UpdateSchoolDTO dto);
+        void Delete(int id, ClaimsPrincipal user);
+        void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user);
 
     }
 
@@ -21,12 +25,17 @@ namespace SchoolAPI.Services
         private readonly SchoolDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<SchoolService> _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public SchoolService(SchoolDbContext dbContext, IMapper mapper, ILogger<SchoolService> logger)
+        public SchoolService(SchoolDbContext dbContext,
+            IMapper mapper,
+            ILogger<SchoolService> logger,
+            IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
 
         public SchoolDTO GetByID(int id)
@@ -58,22 +67,30 @@ namespace SchoolAPI.Services
             return schoolsDTO;
         }
 
-        public int Create(CreateSchoolDTO dto)
+        public int Create(CreateSchoolDTO dto, int teacherId)
         {
             var school = _mapper.Map<School>(dto);
+            school.CreatedById = teacherId;
             _dbContext.Schools.Add(school);
             _dbContext.SaveChanges();
 
             return school.Id;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, ClaimsPrincipal user)
         {
             _logger.LogError($"School with id {id} DELETE action invoked");
 
             var school = _dbContext
             .Schools
             .FirstOrDefault(r => r.Id == id);
+
+            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             if (school is null)
                 throw new NotFoundException("School could not be found");
@@ -83,11 +100,19 @@ namespace SchoolAPI.Services
         }
 
 
-        public void Update(int id, UpdateSchoolDTO dto)
+        public void Update(int id, UpdateSchoolDTO dto, ClaimsPrincipal user)
         {
+
             var school = _dbContext
                 .Schools
                 .FirstOrDefault(r => r.Id == id);
+
+            var authResult = _authorizationService.AuthorizeAsync(user, school, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             if (school is null)
                 throw new NotFoundException("School could not be found");

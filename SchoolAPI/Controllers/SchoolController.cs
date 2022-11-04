@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Entities;
 using SchoolAPI.Models;
 using SchoolAPI.Services;
+using System.Security.Claims;
 
 namespace SchoolAPI.Controllers
 {
@@ -38,8 +39,8 @@ namespace SchoolAPI.Controllers
         [HttpPost]
         public ActionResult CreateSchool([FromBody] CreateSchoolDTO dto)
         {
-
-           var id = _schoolService.Create(dto);
+            var teacherId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+           var id = _schoolService.Create(dto, teacherId);
 
 
             return Created($"/api/schools/{id}",null);
@@ -49,7 +50,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteSchool([FromRoute] int id)
         {
-            _schoolService.Delete(id);
+            _schoolService.Delete(id, User);
 
             return NoContent();
         }
@@ -58,7 +59,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin,Principal")]
         public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
         {
-            _schoolService.Update(id, dto);
+            _schoolService.Update(id, dto, User);
             return Ok();
         }
     }
