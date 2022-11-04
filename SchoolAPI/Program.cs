@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using SchoolAPI;
+using SchoolAPI.Authorization;
 using SchoolAPI.Entities;
 using SchoolAPI.Middleware;
 using SchoolAPI.Models;
