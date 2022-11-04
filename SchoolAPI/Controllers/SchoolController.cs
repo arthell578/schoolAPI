@@ -40,7 +40,7 @@ namespace SchoolAPI.Controllers
         public ActionResult CreateSchool([FromBody] CreateSchoolDTO dto)
         {
             var teacherId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-           var id = _schoolService.Create(dto, teacherId);
+           var id = _schoolService.Create(dto);
 
 
             return Created($"/api/schools/{id}",null);
@@ -50,7 +50,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteSchool([FromRoute] int id)
         {
-            _schoolService.Delete(id, User);
+            _schoolService.Delete(id);
 
             return NoContent();
         }
@@ -59,7 +59,7 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Admin,Principal")]
         public ActionResult UpdateSchool([FromBody] UpdateSchoolDTO dto, [FromRoute]int id)
         {
-            _schoolService.Update(id, dto, User);
+            _schoolService.Update(id, dto);
             return Ok();
         }
     }
