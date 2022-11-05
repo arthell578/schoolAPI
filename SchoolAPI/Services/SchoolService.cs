@@ -63,7 +63,7 @@ namespace SchoolAPI.Services
               .Schools
               .Include(s => s.Address)
               .Include(s => s.courses)
-              .Where(s => s.Name.Contains(searchFilter) || s.Description.Contains(searchFilter))
+              .Where(s => s.Name.ToLower().Contains(searchFilter) || s.Description.ToLower().Contains(searchFilter))
               .ToList();
 
             var schoolsDTO = _mapper.Map<List<SchoolDTO>>(schools);
