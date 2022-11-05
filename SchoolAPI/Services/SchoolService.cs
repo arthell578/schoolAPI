@@ -13,7 +13,7 @@ namespace SchoolAPI.Services
     public interface ISchoolService
     {
         int Create(CreateSchoolDTO dto);
-        IEnumerable<SchoolDTO> GetAll();
+        IEnumerable<SchoolDTO> GetAll(string searchFilter);
         SchoolDTO GetByID(int id);
         void Delete(int id);
         void Update(int id, UpdateSchoolDTO dto);
@@ -57,12 +57,13 @@ namespace SchoolAPI.Services
         }
 
 
-        public IEnumerable<SchoolDTO> GetAll()
+        public IEnumerable<SchoolDTO> GetAll(string searchFilter)
         {
             var schools = _dbContext
               .Schools
               .Include(s => s.Address)
               .Include(s => s.courses)
+              .Where(s => s.Name.Contains(searchFilter) || s.Description.Contains(searchFilter))
               .ToList();
 
             var schoolsDTO = _mapper.Map<List<SchoolDTO>>(schools);
