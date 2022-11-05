@@ -63,7 +63,7 @@ namespace SchoolAPI.Services
               .Schools
               .Include(s => s.Address)
               .Include(s => s.courses)
-              .Where(s => searchFilter != null && (s.Name.ToLower().Contains(searchFilter.ToLower()) ||
+              .Where(s => searchFilter == null || (s.Name.ToLower().Contains(searchFilter.ToLower()) ||
                 s.Description.ToLower().Contains(searchFilter.ToLower())))
               .ToList();
 
