@@ -1,6 +1,6 @@
 ﻿namespace SchoolAPI.Models
 {
-    public class RestaurantQuery
+    public class SchoolQuery
     {
 
         public string SearchPhrase { get; set; }
