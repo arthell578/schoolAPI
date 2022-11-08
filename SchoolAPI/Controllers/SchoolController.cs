@@ -21,7 +21,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<SchoolDTO>> GetAll([FromQuery] string searchFilter)
+        public ActionResult<IEnumerable<SchoolDTO>> GetAll([FromQuery] string searchFilter, [FromQuery]int pageNumber, [FromQuery]int pageSize)
         {
             var schoolsDTO = _schoolService.GetAll(searchFilter);
 
