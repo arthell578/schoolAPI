@@ -64,6 +64,14 @@ builder.Services.AddScoped<IValidator<RegisterTeacherDTO>, RegisterTeacherDTOVal
 builder.Services.AddScoped<IValidator<SchoolQuery>, SchoolQueryValidator>();
 builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options => {
+    options.AddPolicy("Client",builder =>
+    {
+        builder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithOrigins("http://localhost:8080");
+    });
+});
 
 var app = builder.Build();
 
@@ -71,6 +79,7 @@ var scope =app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<SchoolSeeder>();
 
 // Configure the HTTP request pipeline.
+app.UseCors("Client");
 seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
