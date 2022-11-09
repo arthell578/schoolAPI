@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Authorization;
 using SchoolAPI.Entities;
@@ -13,7 +14,7 @@ namespace SchoolAPI.Services
     public interface ISchoolService
     {
         int Create(CreateSchoolDTO dto);
-        IEnumerable<SchoolDTO> GetAll(SchoolQuery query);
+        PageResults<SchoolDTO> GetAll(SchoolQuery query);
         SchoolDTO GetByID(int id);
         void Delete(int id);
         void Update(int id, UpdateSchoolDTO dto);
@@ -57,21 +58,27 @@ namespace SchoolAPI.Services
         }
 
 
-        public IEnumerable<SchoolDTO> GetAll(SchoolQuery query)
+        public PageResults<SchoolDTO> GetAll(SchoolQuery query)
         {
-            var schools = _dbContext
+            var baseQuery = _dbContext
               .Schools
               .Include(s => s.Address)
               .Include(s => s.courses)
               .Where(s => query.SearchPhrase == null || (s.Name.ToLower().Contains(query.SearchPhrase.ToLower()) ||
-                s.Description.ToLower().Contains(query.SearchPhrase.ToLower())))
+                s.Description.ToLower().Contains(query.SearchPhrase.ToLower())));
+
+            var schools = baseQuery
               .Skip(query.PageSize * (query.PageNumber - 1))
               .Take(query.PageSize)
               .ToList();
 
+            var totalItems = baseQuery.Count();
+
             var schoolsDTO = _mapper.Map<List<SchoolDTO>>(schools);
 
-            return schoolsDTO;
+            var result = new PageResults<SchoolDTO>(schoolsDTO, totalItems, query.PageSize,query.PageNumber);
+
+            return result;
         }
 
         public int Create(CreateSchoolDTO dto)
