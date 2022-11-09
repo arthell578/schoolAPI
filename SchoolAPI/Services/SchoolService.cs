@@ -65,6 +65,8 @@ namespace SchoolAPI.Services
               .Include(s => s.courses)
               .Where(s => query.SearchPhrase == null || (s.Name.ToLower().Contains(query.SearchPhrase.ToLower()) ||
                 s.Description.ToLower().Contains(query.SearchPhrase.ToLower())))
+              .Skip(query.PageSize * (query.PageNumber - 1))
+              .Take(query.PageSize)
               .ToList();
 
             var schoolsDTO = _mapper.Map<List<SchoolDTO>>(schools);
