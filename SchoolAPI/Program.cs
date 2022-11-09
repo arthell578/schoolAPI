@@ -61,6 +61,7 @@ builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHa
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<Teacher>,PasswordHasher<Teacher>>();
 builder.Services.AddScoped<IValidator<RegisterTeacherDTO>, RegisterTeacherDTOValidator>();
+builder.Services.AddScoped<IValidator<SchoolQuery>, SchoolQueryValidator>();
 builder.Services.AddScoped<RequestExecutionTimeMiddleware>();
 builder.Services.AddSwaggerGen();
 
