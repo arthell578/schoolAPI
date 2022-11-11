@@ -4,8 +4,8 @@ namespace SchoolAPI.Entities
 {
     public class SchoolDbContext : DbContext
     {
-        private string _connectionString = 
-            "Server=(localdb)\\mssqllocaldb;Database=SchoolDb;Trusted_Connection=True;";
+        public SchoolDbContext(DbContextOptions<SchoolDbContext> options) : base(options) { }
+
         public DbSet<School> Schools { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Course> Courses { get; set; }
@@ -42,11 +42,6 @@ namespace SchoolAPI.Entities
                 .Property(s => s.ContactNumber)
                 .IsRequired()
                 .HasMaxLength(12);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
         }
     }
 }

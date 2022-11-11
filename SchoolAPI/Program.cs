@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using SchoolAPI;
@@ -50,7 +51,7 @@ builder.Services.AddAuthorization(options =>
 
 
 builder.Services.AddControllers().AddFluentValidation();
-builder.Services.AddDbContext<SchoolDbContext>();
+builder.Services.AddDbContext<SchoolDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolDbConnection")));
 builder.Services.AddScoped<SchoolSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ISchoolService, SchoolService>();
